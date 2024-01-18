@@ -1,4 +1,5 @@
 <launch>
+  <param name = "/use_sim_time" type = "bool" value = "true" />
   <node pkg="tf2_ros" type="static_transform_publisher" name="base_camera_broadcaster" args="0.05783 0 0.12197 0 0 0 1 base_link camera"/>
   <node pkg="tf2_ros" type="static_transform_publisher" name="base_imu_broadcaster" args="0 0 0.11818 0 0 0 1 base_link imu"/>
   <node pkg="tf2_ros" type="static_transform_publisher" name="camera_rgb_broadcaster" args="0.010989 -0.0000076 0.0076121 0 0 0 1 camera camera_rgb"/>
