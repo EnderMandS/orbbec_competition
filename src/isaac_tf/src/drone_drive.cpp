@@ -24,7 +24,7 @@ void DroneDrive::init(ros::NodeHandle &nh) {
 }
 
 void DroneDrive::positionCommandCb(
-    const isaac_tf::PositionCommandConstPtr &msg) {
+    const drone_msgs::PositionCommandConstPtr &msg) {
   posititon_cmd = *msg;
 
   sensor_msgs::JointState joint_cmd;
