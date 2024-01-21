@@ -14,6 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   geometry_msgs
   drone_msgs
+  tf2
   tf2_ros
   nav_msgs
 )
@@ -110,7 +111,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
   INCLUDE_DIRS include
 #  LIBRARIES isaac_tf
-  CATKIN_DEPENDS roscpp rospy std_msgs sensor_msgs geometry_msgs drone_msgs tf2_ros nav_msgs
+  CATKIN_DEPENDS roscpp rospy std_msgs sensor_msgs geometry_msgs drone_msgs tf2_ros tf2 nav_msgs
 #  DEPENDS system_lib
 )
 
