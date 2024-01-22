@@ -1,11 +1,11 @@
 #include "drone_drive.h"
 #include "geometry_msgs/Pose.h"
 #include "geometry_msgs/PoseStamped.h"
-#include "ros/time.h"
 #include "tf/LinearMath/Matrix3x3.h"
 #include <cmath>
 #include <nav_msgs/Path.h>
 #include <sensor_msgs/JointState.h>
+#include <std_srvs/Empty.h>
 #include <tf/tf.h>
 #include <tf2/LinearMath/Quaternion.h>
 
@@ -33,6 +33,8 @@ void DroneDrive::init(ros::NodeHandle &nh) {
   cmd_pub_timer =
       nh.createTimer(ros::Duration(0.01), &DroneDrive::cmdPubTimerCb, this);
   nav_pub = nh.advertise<nav_msgs::Path>("/waypoint_generator/waypoints", 1);
+  set_yaw_client = nh.serviceClient<std_srvs::Empty>("/set_yaw");
+  take_picture_client = nh.serviceClient<std_srvs::Empty>("/take_picture");
 }
 
 // yaw convert to [-2PI, 2PI]
@@ -93,10 +95,8 @@ const PosCmd waypoint_list[] = {
     {7.18814, 5.48069, 2.9, 0, false, true},
 
     {28, 3.50703, 2.9, -M_PI / 2, true},
-    {28, 3.50703, 2.9, -M_PI / 2, false},
 
     {28, -1.97831, 0.94074, -M_PI, true},
-    {28, -1.97831, 0.94074, -M_PI, false},
 
     {0, 0, 1, 0, true},
     {0, 0, 0.5, 0, false},
@@ -173,16 +173,26 @@ void DroneDrive::cmdPubTimerCb(const ros::TimerEvent &e) {
   }
 
   // traj complete?
-  if (inPosition(waypoint_list[waypoint_now]) == true) {  // arrived?
-    bool next = false;
-    if (waypoint_list[waypoint_now].planner_ctrl == false) {  // planner or manual
-      if (smooth_pos.trajComplete()) {  // manual complete
+  if (inPosition(waypoint_list[waypoint_now]) == true) { // arrived?
+    bool next = false, take_picture = false;
+    if (waypoint_list[waypoint_now].planner_ctrl ==
+        false) {                       // planner or manual
+      if (smooth_pos.trajComplete()) { // manual complete
         next = true;
       }
-    } else if (exec_status == WAIT_TARGET) {  // planner complete
+    } else if (exec_status == WAIT_TARGET) { // planner complete
       next = true;
     }
     if (next) { // current traj complete, execute next
+      if (waypoint_list[waypoint_now].picture) { // take picture?
+        std_srvs::Empty srv;
+        if (!take_picture_client.call(srv)) {
+          ROS_WARN("Take picture fail at x:%.1f, y:%.1f, z:%.1f. Go on.",
+                   waypoint_list[waypoint_now].x, waypoint_list[waypoint_now].y,
+                   waypoint_list[waypoint_now].z);
+        }
+      }
+
       ++waypoint_now;
       if (waypoint_now >= sizeof(waypoint_list) / sizeof(PosCmd)) {
         ROS_INFO("All waypoint published. Complete.");
@@ -195,7 +205,14 @@ void DroneDrive::cmdPubTimerCb(const ros::TimerEvent &e) {
                waypoint_list[waypoint_now].z, waypoint_list[waypoint_now].yaw,
                waypoint_list[waypoint_now].planner_ctrl);
       if (waypoint_list[waypoint_now].planner_ctrl == true) { // next planner
-        pos_cmd_update = false;
+        pos_cmd_update = false; // clean flag of planner control command receive
+        if (waypoint_list[waypoint_now - 1].planner_ctrl == false) {
+          std_srvs::Empty srv;
+          if (!set_yaw_client.call(srv)) {
+            ROS_WARN("Set yaw fail!");
+          }
+          ROS_INFO("Reseted yaw.");
+        }
         pubWaypoint(waypoint_list[waypoint_now]);
         return; // return wait for pos_cmd_update;
       } else {  // next manual
@@ -207,7 +224,7 @@ void DroneDrive::cmdPubTimerCb(const ros::TimerEvent &e) {
 
   // make sure receive planner contorl command
   if (waypoint_list[waypoint_now].planner_ctrl == true) {
-    if (!pos_cmd_update) { 
+    if (!pos_cmd_update) {
       return;
     } else {
       pos_cmd_update = false;
@@ -220,7 +237,7 @@ void DroneDrive::cmdPubTimerCb(const ros::TimerEvent &e) {
   if (waypoint_list[waypoint_now].planner_ctrl) { // planner
     joint_cmd.position = {planner_pos_cmd.x, planner_pos_cmd.y,
                           planner_pos_cmd.z, yawConvert(planner_pos_cmd.yaw)};
-  } else {  // manual
+  } else { // manual
     joint_cmd.position = smooth_pos.getPosNow();
   }
   joint_cmd.header.stamp = ros::Time::now();

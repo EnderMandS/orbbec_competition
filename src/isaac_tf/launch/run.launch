@@ -7,5 +7,9 @@
   <node pkg="tf2_ros" type="static_transform_publisher" name="camera_left_broadcaster" args="0.0061398 -0.025 0 0 0 0 1 camera camera_left"/>
   <node pkg="tf2_ros" type="static_transform_publisher" name="camera_right_broadcaster" args="0.0061398 0.025 -0.0000001 0 0 0 1 camera camera_right"/>
 
-  <node pkg="isaac_tf" type="drone_drive" name="drone_drive" output="screen"/>
+  <node pkg="take_picture" type="take_picture" name="take_picture" output="screen" >
+    <param name="image_save_path" value="/home/m/code/ros_ws/image/" />
+  </node>
+
+  <node pkg="isaac_tf" type="drone_drive" name="drone_drive" output="screen" />
 </launch>

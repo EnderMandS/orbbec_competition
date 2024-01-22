@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(isaac_tf)
+project(take_picture)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -8,16 +8,10 @@ project(isaac_tf)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  cv_bridge
   roscpp
-  rospy
-  std_msgs
-  sensor_msgs
-  geometry_msgs
-  drone_msgs
-  tf2
-  tf2_ros
-  nav_msgs
   std_srvs
+  sensor_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -53,10 +47,11 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * uncomment the generate_messages entry below
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
-# # Generate messages in the 'msg' folder
+## Generate messages in the 'msg' folder
 # add_message_files(
 #   FILES
-#   PositionCommand.msg
+#   Message1.msg
+#   Message2.msg
 # )
 
 ## Generate services in the 'srv' folder
@@ -73,11 +68,10 @@ find_package(catkin REQUIRED COMPONENTS
 #   Action2.action
 # )
 
-# Generate added messages and services with any dependencies listed here
+## Generate added messages and services with any dependencies listed here
 # generate_messages(
 #   DEPENDENCIES
 #   std_msgs  # Or other packages containing msgs
-#   geometry_msgs
 # )
 
 ################################################
@@ -110,9 +104,9 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-  INCLUDE_DIRS include
-#  LIBRARIES isaac_tf
-  CATKIN_DEPENDS roscpp rospy std_msgs sensor_msgs geometry_msgs drone_msgs tf2_ros tf2 nav_msgs std_srvs
+#  INCLUDE_DIRS include
+#  LIBRARIES take_picture
+ CATKIN_DEPENDS cv_bridge roscpp std_srvs sensor_msgs
 #  DEPENDS system_lib
 )
 
@@ -123,13 +117,13 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-  include
+  # include
   ${catkin_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/isaac_tf.cpp
+#   src/${PROJECT_NAME}/take_picture.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -140,7 +134,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(drone_drive src/drone_drive.cpp)
+add_executable(${PROJECT_NAME} src/take_picture.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -150,10 +144,10 @@ add_executable(drone_drive src/drone_drive.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-add_dependencies(drone_drive ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+# add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(drone_drive
+target_link_libraries(${PROJECT_NAME}
   ${catkin_LIBRARIES}
 )
 
@@ -204,7 +198,7 @@ target_link_libraries(drone_drive
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_isaac_tf.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_take_picture.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

@@ -37,6 +37,7 @@ private:
   ros::Subscriber posititon_cmd_sub;
   ros::Publisher joint_pub, nav_pub;
   ros::Timer cmd_pub_timer;
+  ros::ServiceClient set_yaw_client, take_picture_client;
   PosCmd planner_pos_cmd;
   SmoothTraj smooth_pos;
   void positionCommandCb(const drone_msgs::PositionCommandConstPtr &);

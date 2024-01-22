@@ -15,7 +15,8 @@ WORKDIR /home/$USERNAME/code/ros_ws
 COPY . /home/$USERNAME/code/ros_ws
 RUN sudo chmod 777 -R /home/$USERNAME/code && . /opt/ros/${ROS_DISTRO}/setup.sh && \
     catkin_make -DCATKIN_WHITELIST_PACKAGES="" -DCMAKE_BUILD_TYPE=Release && \
-    echo "source /home/${USERNAME}/code/ros_ws/devel/setup.zsh" >> /home/${USERNAME}/.zshrc
+    echo "source /home/${USERNAME}/code/ros_ws/devel/setup.zsh" >> /home/${USERNAME}/.zshrc && \
+    mkdir /home/$USERNAME/code/ros_ws/image
 
 ENTRYPOINT [ "/bin/zsh" ]
 # ENTRYPOINT [ "/home/${USERNAME}/code/ros_ws/start.zsh" ]

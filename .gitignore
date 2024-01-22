@@ -3,4 +3,5 @@
 .catkin_workspace
 build/
 devel/
+image/
 src/CMakeLists.txt
