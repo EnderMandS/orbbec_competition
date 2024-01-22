@@ -7,13 +7,25 @@
 #include <nav_msgs/Odometry.h>
 #include <ros/ros.h>
 #include <tf2_ros/transform_listener.h>
+#include <vector>
 
 namespace Drone {
 
-struct {
-  double x, y, z, yaw;
-  bool planner_ctrl;
+struct PosCmd {
+  double x = 0, y = 0, z = 0, yaw = 0;
+  bool planner_ctrl = false, picture = false;
 } typedef PosCmd;
+
+class SmoothTraj {
+private:
+#define TRAJ_TIME (1.0)
+  PosCmd start_pos, end_pos;
+  double start_time;
+public:
+  void genNew(PosCmd, PosCmd);
+  std::vector<double> getPosNow(void);
+  bool trajComplete(void);
+};
 
 class DroneDrive {
 public:
@@ -25,10 +37,12 @@ private:
   ros::Subscriber posititon_cmd_sub;
   ros::Publisher joint_pub, nav_pub;
   ros::Timer cmd_pub_timer;
-  PosCmd planner_pos_cmd = {0, 0, 0, 0, false};
+  PosCmd planner_pos_cmd;
+  SmoothTraj smooth_pos;
   void positionCommandCb(const drone_msgs::PositionCommandConstPtr &);
   void cmdPubTimerCb(const ros::TimerEvent &);
   bool inPosition(PosCmd);
+  bool inYaw(PosCmd);
   void pubWaypoint(PosCmd);
 
   // camera pose tf
