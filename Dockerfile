@@ -24,4 +24,4 @@ VOLUME [ "/home/m/code/ros_ws/image" ]
 WORKDIR /home/${USERNAME}/code/ros_ws/src/isaac_tf/launch
 
 # ENTRYPOINT [ "/bin/zsh" ]
-ENTRYPOINT [ "/home/m/code/ros_ws/start.sh" ]
+ENTRYPOINT [ "zsh -c /home/m/code/ros_ws/start.zsh" ]

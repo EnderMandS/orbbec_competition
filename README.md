@@ -45,7 +45,7 @@ Create a new stage, then open the Isaac Assets tab and search for **full_warehou
 
 Download **drone.zip** from the **IsaacAsset** folder in the repository. Unzip it to wherever you store your isaac models. This model is a drone model with basic ROS interface.
 
-<img src="README/drone.jpg" style="zoom:50%;" />
+<div align=center><img src="README/drone.jpg" style="zoom:50%;" /></div>
 
 ##### 3. Import drone
 
@@ -55,15 +55,17 @@ In the Content tab navigate to the place where the drone model was unzipped in s
 
 The drone will fly between two 06 shelves (with a forklift in the middle) and you can add some obstacles to block the drone from flying. Make sure there is enough space between the obstacles for the drone to travel through.
 
-<img src="README/obstacles.jpg" style="zoom:50%;" />
+<div align=center><img src="README/obstacles.jpg" style="zoom:50%;" /></div>
 
 ##### Testing
 
 Based on the above steps, your stage should look like this
 
-<img src="README/Stage.jpg" style="zoom:75%;" />
+<div align=center><img src="README/Stage.jpg" style="zoom:75%;" /></div>
 
-<img src="README/world_whole.jpg" style="zoom:50%;" />
+<div align=center><img src="README/world_whole.jpg" style="zoom:50%;" /></div>
+
+
 
 Running `roscore` in a ROS sourced terminal.
 
