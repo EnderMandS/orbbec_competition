@@ -28,7 +28,7 @@ Get the docker images by running the following lines
 
 ```shell
 docker pull endermands/orbbec_competition:latest
-docker pull endermands/ego_planner:latest
+docker pull endermands/ego_planner:4th3DV
 ```
 
 If you want to make modifications, the image already has zsh and vim installed.
@@ -90,22 +90,22 @@ If you have trouble creating the stage I can send you the full USD file(484MB).
 3. Open two terminals. Start the code for this repository in one of the terminals by running the following line.
 
 ```shell
-docker run -it --rm --name isaac_tf --net host endermands/orbbec_competition:latest
+docker run -it --rm --net host endermands/orbbec_competition:latest
 ```
 
 ​	A Volume is provided in this container. The pictures taken by the programme will be saved in this volume. You can specify the volume path by executing the following command in place of the previous one.
 
 ```shell
-docker run -it --rm --name isaac_tf --net host -v /host/path:/home/m/code/ros_ws/image endermands/orbbec_competition:latest
+docker run -it --rm --net host -v /host/path:/home/m/code/ros_ws/image endermands/orbbec_competition:latest
 ```
 
 4. In another terminals, running EGO-Planner.
 
 ```shell
-docker run -it --rm --name ego_planner --net host endermands/ego_planner:latest
+docker run -it --rm --net host endermands/ego_planner:4th3DV
 ```
 
-​	Notice that this docker image may change in the future and no longer work with the current repository code. You can find the current adapted version in another repository's release. Then rebuild the docker image, or compile it directly.
+​	Notice that this docker image may change in the future and no longer work with the current repository code. You can find the current adapted version in [another repository's release](https://github.com/EnderMandS/ego-planner/releases/tag/v1.0). Then rebuild the docker image, or compile it directly.
 
 5. Let the programme fly for a while. You should see the drone take off and start navigating. You can also visualise paths and obstacles with Rviz. After the drone returns to the starting point you can find some pictures of the shelf number in the docker container volume.
 
