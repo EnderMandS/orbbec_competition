@@ -2,9 +2,11 @@
 
 This repository is part of the code for the 4th 3DV competition simulation part from SCNU.
 
-Another part of code could be found from [my another repository](https://github.com/EnderMandS/ego-planner). 
+Another part of code could be found from [my another repository](https://github.com/EnderMandS/ego-planner).
 
-<video src="README/Drone1_720.mp4"></video>
+![video](README/video.gif)
+
+The video actually carries a 16x speed. The green dot in the GIF above is a problem with video compression. For HD video [click here](https://www.bilibili.com/video/BV1r5411y7bu/).
 
 The drone takes off from its point of origin. Autonomously navigates to the shelf number to take a picture. Then it goes around between the shelves and avoids the obstacles in the middle of the shelves. Finally return to the starting point.
 
@@ -41,7 +43,9 @@ Create a new stage, then open the Isaac Assets tab and search for **full_warehou
 
 ##### 2. Download drone USD file
 
-Download **drone.zip** from the **IsaacAsset** folder in the repository. Unzip it to wherever you store your issac models. This model is a drone model with basic ROS interface.
+Download **drone.zip** from the **IsaacAsset** folder in the repository. Unzip it to wherever you store your isaac models. This model is a drone model with basic ROS interface.
+
+<img src="README/drone.jpg" style="zoom:50%;" />
 
 ##### 3. Import drone
 
