@@ -11,12 +11,17 @@ RUN sudo apt update && \
     sudo rm -rf /var/lib/apt/lists/*
 
 # compile project
-WORKDIR /home/$USERNAME/code/ros_ws
-COPY . /home/$USERNAME/code/ros_ws
-RUN sudo chmod 777 -R /home/$USERNAME/code && . /opt/ros/${ROS_DISTRO}/setup.sh && \
+WORKDIR /home/${USERNAME}/code/ros_ws
+COPY . /home/${USERNAME}/code/ros_ws
+RUN sudo rm -rf IsaacAsset/ && sudo rm -rf README/ && sudo rm README.md && \
+    sudo chmod 777 -R /home/${USERNAME}/code && . /opt/ros/${ROS_DISTRO}/setup.sh && \
     catkin_make -DCATKIN_WHITELIST_PACKAGES="" -DCMAKE_BUILD_TYPE=Release && \
-    echo "source /home/${USERNAME}/code/ros_ws/devel/setup.zsh" >> /home/${USERNAME}/.zshrc && \
-    mkdir /home/$USERNAME/code/ros_ws/image
+    echo "source /home/${USERNAME}/code/ros_ws/devel/setup.zsh" >> /home/${USERNAME}/.zshrc
 
-ENTRYPOINT [ "/bin/zsh" ]
-# ENTRYPOINT [ "/home/${USERNAME}/code/ros_ws/start.zsh" ]
+# Images taken by the program are saved to this directory
+VOLUME [ "/home/${USERNAME}/code/ros_ws/image" ]
+
+WORKDIR /home/${USERNAME}/code/ros_ws/src/isaac_tf/launch
+
+# ENTRYPOINT [ "/bin/zsh" ]
+ENTRYPOINT [ "/home/${USERNAME}/code/ros_ws/start.sh" ]
