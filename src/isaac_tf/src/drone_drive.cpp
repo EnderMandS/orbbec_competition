@@ -35,6 +35,8 @@ void DroneDrive::init(ros::NodeHandle &nh) {
   nav_pub = nh.advertise<nav_msgs::Path>("/waypoint_generator/waypoints", 1);
   set_yaw_client = nh.serviceClient<std_srvs::Empty>("/set_yaw");
   take_picture_client = nh.serviceClient<std_srvs::Empty>("/take_picture");
+  start_record_client = nh.serviceClient<std_srvs::Empty>("/start_record");
+  stop_record_client = nh.serviceClient<std_srvs::Empty>("/stop_record");
 }
 
 // yaw convert to [-2PI, 2PI]
@@ -81,28 +83,49 @@ void DroneDrive::execStatusCb(const drone_msgs::ExecStatusConstPtr &msg) {
   exec_status = msg->exec_flag;
 }
 
+// The drone will fly around the center and record an video
+// The axis is in Isaac Sim, not ROS
+#define CENTER_X (2.0)
+#define CENTER_Y (0.0)
+#define RADIUS (1.25)
+#define SQRT_R (sqrt(RADIUS))
 const PosCmd waypoint_list[] = {
-    {0, 0, 0, 0, false},
-    {0, 0, 0.6, 0, false},
+  {0, 0, 0, 0, false},
+  {0, 0, 0.6, 0, false},
+  {7.18814, -4.13339, 2.9, 0, true},
+  {7.18814, -4.13339, 2.9, 0, false, true},
+  {7.18814, 0.48393, 2.9, 0, true},
+  {7.18814, 0.48393, 2.9, 0, false, true},
+  {7.18814, 5.48069, 2.9, 0, true},
+  {7.18814, 5.48069, 2.9, 0, false, true},
+  {28, 3.50703, 2.9, -M_PI / 2, true},
+  {28, -1.97831, 0.94074, -M_PI, true},
+  {2, -2, 0.7, -M_PI, true},
+  // around franka
+  {CENTER_Y+RADIUS, -CENTER_X, 0.7, -M_PI, false},
+  {CENTER_Y+SQRT_R, -(CENTER_X-SQRT_R), 0.7, -M_PI*3/4, false},
+  {CENTER_Y, -(CENTER_X-RADIUS), 0.7, -M_PI/2, false},
+  {CENTER_Y-SQRT_R, -(CENTER_X-SQRT_R), 0.7, -M_PI/4, false},
+  {CENTER_Y-RADIUS, -(CENTER_X), 0.7, 0, false},
+  {CENTER_Y-SQRT_R, -(CENTER_X+SQRT_R), 0.7, M_PI/4, false},
+  {CENTER_Y, -(CENTER_X+RADIUS), 0.7, M_PI/2, false},
+  {CENTER_Y+SQRT_R, -(CENTER_X+SQRT_R), 0.7, M_PI*3/4, false},
+  // around franks 2
+  {CENTER_Y+RADIUS, -CENTER_X, 0.4, M_PI, false},
+  {CENTER_Y+SQRT_R, -(CENTER_X+SQRT_R), 0.4, M_PI*3/4, false},
+  {CENTER_Y, -(CENTER_X+RADIUS), 0.4, M_PI/2, false},
+  {CENTER_Y-SQRT_R, -(CENTER_X+SQRT_R), 0.4, M_PI/4, false},
+  {CENTER_Y-RADIUS, -(CENTER_X), 0.4, 0, false},
+  {CENTER_Y-SQRT_R, -(CENTER_X-SQRT_R), 0.4, -M_PI/4, false},
+  {CENTER_Y, -(CENTER_X-RADIUS), 0.4, -M_PI/2, false},
+  {CENTER_Y+SQRT_R, -(CENTER_X-SQRT_R), 0.4, -M_PI*3/4, false},
+  {CENTER_Y+RADIUS, -CENTER_X, 0.4, -M_PI, false},
 
-    {7.18814, -4.13339, 2.9, 0, true},
-    {7.18814, -4.13339, 2.9, 0, false, true},
-
-    {7.18814, 0.48393, 2.9, 0, true},
-    {7.18814, 0.48393, 2.9, 0, false, true},
-
-    {7.18814, 5.48069, 2.9, 0, true},
-    {7.18814, 5.48069, 2.9, 0, false, true},
-
-    {28, 3.50703, 2.9, -M_PI / 2, true},
-
-    {28, -1.97831, 0.94074, -M_PI, true},
-
-    {0, 0, 1, 0, true},
-    {0, 0, 0.5, 0, false},
-
-    {0, 0, 0, 0, false},
+  {0, 0, 0.4, 0, true},
+  {0, 0, 0, 0, false},
 };
+#define VIDEO_START ((int)11)
+#define VIDEO_STOP ((int)27)
 
 bool DroneDrive::inPosition(PosCmd p2) {
 #define DIS_ABS (0.2)
@@ -199,6 +222,18 @@ void DroneDrive::cmdPubTimerCb(const ros::TimerEvent &e) {
         finish = true;
         cmd_pub_timer.stop();
         return;
+      }
+      // record video
+      if (waypoint_now==VIDEO_START) {
+        std_srvs::Empty srv;
+        if (!start_record_client.call(srv)) {
+          ROS_ERROR("Call service start record video fail!");
+        }
+      } else if (waypoint_now==VIDEO_STOP+1) {
+        std_srvs::Empty srv;
+        if (!stop_record_client.call(srv)) {
+          ROS_ERROR("Call service stop record video fail!");
+        }
       }
       ROS_INFO("new waypoint x:%.1f, y:%.1f, z:%.1f, yaw:%.1f, plan_ctrl=%d",
                waypoint_list[waypoint_now].x, waypoint_list[waypoint_now].y,

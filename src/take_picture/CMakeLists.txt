@@ -12,6 +12,8 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_srvs
   sensor_msgs
+  nav_msgs
+  tf
 )
 
 ## System dependencies are found with CMake's conventions
@@ -106,7 +108,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES take_picture
- CATKIN_DEPENDS cv_bridge roscpp std_srvs sensor_msgs
+ CATKIN_DEPENDS cv_bridge roscpp std_srvs sensor_msgs nav_msgs tf
 #  DEPENDS system_lib
 )
 

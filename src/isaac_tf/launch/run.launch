@@ -9,6 +9,7 @@
 
   <node pkg="take_picture" type="take_picture" name="take_picture" output="screen" >
     <param name="image_save_path" value="/home/m/code/ros_ws/image/" />
+    <param name="video_save_path" value="/home/m/code/ros_ws/video/" />
   </node>
 
   <node pkg="isaac_tf" type="drone_drive" name="drone_drive" output="screen" />

@@ -21,6 +21,7 @@ private:
 #define TRAJ_TIME (1.0)
   PosCmd start_pos, end_pos;
   double start_time;
+
 public:
   void genNew(PosCmd, PosCmd);
   std::vector<double> getPosNow(void);
@@ -37,7 +38,8 @@ private:
   ros::Subscriber posititon_cmd_sub;
   ros::Publisher joint_pub, nav_pub;
   ros::Timer cmd_pub_timer;
-  ros::ServiceClient set_yaw_client, take_picture_client;
+  ros::ServiceClient set_yaw_client, take_picture_client, start_record_client,
+      stop_record_client;
   PosCmd planner_pos_cmd;
   SmoothTraj smooth_pos;
   void positionCommandCb(const drone_msgs::PositionCommandConstPtr &);
