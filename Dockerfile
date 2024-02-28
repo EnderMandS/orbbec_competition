@@ -8,7 +8,7 @@ ARG PROJECT_NAME=orbbec_competition
 # install binary
 RUN sudo apt update && \
     sudo apt install -y ros-${ROS_DISTRO}-tf ros-${ROS_DISTRO}-tf2 ros-${ROS_DISTRO}-tf2-ros && \
-    sudo apt install -y libx264-dev \
+    sudo apt install -y libx264-dev && \
     sudo rm -rf /var/lib/apt/lists/*
 
 # compile project

@@ -37,7 +37,7 @@ If you want to make modifications, the image already has zsh and vim installed.
 
 ## Setup simulation stage
 
-You can either download the full collected USD file directly here or build the stage according to the following guidelines.
+You can either download the full collected USD file directly [here](https://pan.baidu.com/s/1hjKMUBrKDaziJm4OeORBkg?pwd=2024) or build the stage according to the following guidelines.
 
 ### Add warehouse to stage
 
@@ -49,7 +49,7 @@ Create a new stage, then open the Isaac Assets tab and search for **full_warehou
 
 Download **drone.zip** from the **IsaacAsset** folder in the repository. Unzip it to wherever you store your isaac models. This model is a drone model with basic ROS interface.
 
-<div align=center><img src="README/drone.jpg" style="zoom:50%;" /></div>
+<div align=center><img src="README/drone.jpg" style="zoom:40%;" /></div>
 
 ### Import drone
 
@@ -69,7 +69,7 @@ Open the Isaac Assets tab and search for **franka**. Drag and drop it to the Wor
 
 Based on the above steps, your stage should look like this
 
-<div align=center><img src="README/Stage.jpg" style="zoom:75%;" /></div>
+<div align=center><img src="README/Stage.jpg" style="zoom:50%;" /></div>
 
 <div align=center><img src="README/world_whole.jpg" style="zoom:50%;" /></div>
 
@@ -129,7 +129,7 @@ Replace your ROS distro in the following lines.
 
 ```shell
 sudo apt update
-sudo apt install -y ros-noetic-tf ros-noetic-tf2 ros-noetic-tf2-ros ros-noetic-cv-bridge
+sudo apt install -y ros-noetic-tf ros-noetic-tf2 ros-noetic-tf2-ros ros-noetic-cv-bridge libx264-dev
 ```
 
 ### Clone & Build
