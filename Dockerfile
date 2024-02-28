@@ -8,7 +8,7 @@ ARG PROJECT_NAME=orbbec_competition
 # install binary
 RUN sudo apt update && \
     sudo apt install -y ros-${ROS_DISTRO}-tf ros-${ROS_DISTRO}-tf2 ros-${ROS_DISTRO}-tf2-ros && \
-    sudo apt install -y libx264-dev
+    sudo apt install -y libx264-dev \
     sudo rm -rf /var/lib/apt/lists/*
 
 # compile project
@@ -20,7 +20,7 @@ RUN sudo rm -rf IsaacAsset/ && sudo rm -rf README/ && sudo rm README.md && \
     echo "source /home/m/code/ros_ws/devel/setup.zsh" >> /home/${USERNAME}/.zshrc
 
 # Images taken by the program are saved to this directory
-VOLUME [ "/home/m/code/ros_ws/image" ]
+VOLUME [ "/home/m/code/ros_ws" ]
 
 WORKDIR /home/${USERNAME}/code/ros_ws/src/isaac_tf/launch
 
